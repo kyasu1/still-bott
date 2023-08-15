@@ -1,0 +1,70 @@
+table:
+  name: task_fixed_time
+  schema: public
+object_relationships:
+  - name: tag
+    using:
+      foreign_key_constraint_on: tag_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+insert_permissions:
+  - role: basic
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      columns:
+        - enabled
+        - fri
+        - mon
+        - random
+        - sat
+        - sun
+        - tag_id
+        - thu
+        - tue
+        - tweet_at
+        - user_id
+        - wed
+select_permissions:
+  - role: basic
+    permission:
+      columns:
+        - enabled
+        - fri
+        - mon
+        - random
+        - sat
+        - sun
+        - thu
+        - tue
+        - wed
+        - user_id
+        - created_at
+        - updated_at
+        - tweet_at
+        - id
+        - tag_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+update_permissions:
+  - role: basic
+    permission:
+      columns:
+        - enabled
+        - fri
+        - mon
+        - random
+        - sat
+        - sun
+        - tag_id
+        - thu
+        - tue
+        - tweet_at
+        - wed
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      check: null

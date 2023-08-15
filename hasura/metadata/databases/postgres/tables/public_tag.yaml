@@ -1,0 +1,53 @@
+table:
+  name: tag
+  schema: public
+object_relationships:
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+array_relationships:
+  - name: messages
+    using:
+      foreign_key_constraint_on:
+        column: tag_id
+        table:
+          name: message
+          schema: public
+insert_permissions:
+  - role: basic
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      columns:
+        - description
+        - id
+        - name
+        - user_id
+select_permissions:
+  - role: basic
+    permission:
+      columns:
+        - description
+        - name
+        - user_id
+        - id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+update_permissions:
+  - role: basic
+    permission:
+      columns:
+        - description
+        - name
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      check: null
+delete_permissions:
+  - role: basic
+    permission:
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id

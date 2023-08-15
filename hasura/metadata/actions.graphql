@@ -1,0 +1,120 @@
+type Mutation {
+  confirmEmail(
+    args: ConfirmEmailInput!
+  ): ConfirmEmailOutput!
+}
+
+type Mutation {
+  deleteImage(
+    args: DeleteImageInput!
+  ): DeleteImageOutput!
+}
+
+type Query {
+  getToken(
+    user_id: String!
+  ): GetTokenOutput
+}
+
+type Query {
+  getUser(
+    user_id: String!
+  ): GetUserOutput
+}
+
+type Mutation {
+  minioGetUploadUrl(
+    args: MinioGetUploadUrlInput!
+  ): MinioGetUploadUrlOutput!
+}
+
+type Mutation {
+  registerEmail(
+    args: RegisterEmailInput!
+  ): RegisterEmailOutput!
+}
+
+type Mutation {
+  restartScheduler(
+    args: BooleanInput!
+  ): BooleanOutput!
+}
+
+type Mutation {
+  saveMedia(
+    args: SaveMediaInput!
+  ): SaveMediaOutput!
+}
+
+input GetUserInput {
+  user_id: String!
+}
+
+input ConfirmEmailInput {
+  email: String!
+  code: String!
+}
+
+input RegisterEmailInput {
+  email: String!
+}
+
+input SaveMediaInput {
+  mediaId: uuid!
+}
+
+input MinioGetUploadUrlInput {
+  dummy: Boolean!
+}
+
+input DeleteImageInput {
+  mediaId: uuid!
+}
+
+input BooleanInput {
+  dummy: Boolean!
+}
+
+type GetUserOutput {
+  username: String!
+}
+
+type GetTokenOutput {
+  token: String
+}
+
+type ConfirmEmailOutput {
+  result: Boolean!
+}
+
+type RegisterEmailOutput {
+  email: String!
+}
+
+type MinioGetUploadUrlOutput {
+  url: String!
+  mediaId: uuid!
+}
+
+type Media {
+  id: uuid!
+  userId: String!
+  thumbnail: String!
+  uploadeAt: timestamptz!
+}
+
+type SaveMediaOutput {
+  id: uuid!
+  userId: String!
+  thumbnail: String!
+  uploadedAt: timestamptz!
+}
+
+type DeleteImageOutput {
+  mediaId: uuid!
+}
+
+type BooleanOutput {
+  result: Boolean!
+}
+

@@ -219,7 +219,7 @@ type alias Response a =
 
 endpoint : String
 endpoint =
-    "__HASURA_ENDPOINT__"
+    "__HASURA_ENDPOINT__" ++ "/v1/graphql"
 
 
 withToken : User -> Graphql.Http.Request decodesTo -> Graphql.Http.Request decodesTo

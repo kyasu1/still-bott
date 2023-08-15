@@ -1,0 +1,64 @@
+table:
+  name: message
+  schema: public
+object_relationships:
+  - name: media
+    using:
+      foreign_key_constraint_on: media_id
+  - name: tag
+    using:
+      foreign_key_constraint_on: tag_id
+  - name: user
+    using:
+      foreign_key_constraint_on: user_id
+insert_permissions:
+  - role: basic
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      columns:
+        - created_at
+        - id
+        - media_id
+        - priority
+        - tag_id
+        - text
+        - tweeted
+        - updated_at
+        - user_id
+select_permissions:
+  - role: basic
+    permission:
+      columns:
+        - created_at
+        - id
+        - media_id
+        - priority
+        - tag_id
+        - text
+        - tweeted
+        - updated_at
+        - user_id
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+update_permissions:
+  - role: basic
+    permission:
+      columns:
+        - media_id
+        - priority
+        - tag_id
+        - text
+        - tweeted
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      check: null
+delete_permissions:
+  - role: basic
+    permission:
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id

@@ -1,0 +1,17 @@
+table:
+  name: session
+  schema: public
+select_permissions:
+  - role: basic
+    permission:
+      columns:
+        - access_token
+        - expires_in
+        - id
+        - issued_at
+        - name
+        - refresh_token
+        - user_name
+      filter:
+        id:
+          _eq: X-Hasura-User-Id

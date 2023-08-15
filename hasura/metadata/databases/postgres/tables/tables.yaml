@@ -1,0 +1,8 @@
+- "!include public_media.yaml"
+- "!include public_message.yaml"
+- "!include public_role.yaml"
+- "!include public_session.yaml"
+- "!include public_tag.yaml"
+- "!include public_task_fixed_time.yaml"
+- "!include public_task_rss.yaml"
+- "!include public_user.yaml"

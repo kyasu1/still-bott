@@ -18,7 +18,7 @@ pub struct Config {
     pub hasura_graphql_admin_secret: String,
     pub hasura_action_secret: String,
 
-    pub hasura_endpoint: String,
+    pub hasura_graphql_endpoint: String,
     pub postgres_endpoint: String,
 
     pub minio_endpoint: String,
@@ -28,6 +28,7 @@ pub struct Config {
 
     hasura_graphql_jwt_secret: String,
 
+    // for oauth_1
     api_key: String,
     api_secret_key: String,
     access_token: String,

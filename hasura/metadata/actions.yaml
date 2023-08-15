@@ -1,0 +1,103 @@
+actions:
+  - name: confirmEmail
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_ACTION_ENDPOINT}}/api/v1/confirm_email'
+      forward_client_headers: true
+      headers:
+        - name: ACTION_SECRET
+          value_from_env: HASURA_ACTION_SECRET
+    permissions:
+      - role: basic
+      - role: anonymous
+  - name: deleteImage
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_ACTION_ENDPOINT}}/api/v1/delete_image'
+      forward_client_headers: true
+      headers:
+        - name: ACTION_SECRET
+          value_from_env: HASURA_ACTION_SECRET
+    permissions:
+      - role: basic
+  - name: getToken
+    definition:
+      kind: ""
+      handler: '{{HASURA_ACTION_ENDPOINT}}/api/v1/get_token'
+      forward_client_headers: true
+      headers:
+        - name: ACTION_SECRET
+          value: HASURA_ACTION_SECRET
+  - name: getUser
+    definition:
+      kind: ""
+      handler: '{{HASURA_ACTION_ENDPOINT}}/api/v1/get_user'
+      forward_client_headers: true
+      headers:
+        - name: ACTION_SECRET
+          value_from_env: HASURA_ACTION_SECRET
+    permissions:
+      - role: basic
+  - name: minioGetUploadUrl
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_ACTION_ENDPOINT}}/api/v1/minio_get_upload_url'
+      forward_client_headers: true
+      headers:
+        - name: ACTION_SECRET
+          value_from_env: HASURA_ACTION_SECRET
+    permissions:
+      - role: basic
+  - name: registerEmail
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_ACTION_ENDPOINT}}/api/v1/register_email'
+      forward_client_headers: true
+      headers:
+        - name: ACTION_SECRET
+          value_from_env: HASURA_ACTION_SECRET
+    permissions:
+      - role: anonymous
+      - role: basic
+    comment: registerEmail
+  - name: restartScheduler
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_ACTION_ENDPOINT}}/api/v1/restart_scheduler'
+      forward_client_headers: true
+      headers:
+        - name: ACTION_SECRET
+          value_from_env: HASURA_ACTION_SECRET
+    permissions:
+      - role: basic
+  - name: saveMedia
+    definition:
+      kind: synchronous
+      handler: '{{HASURA_ACTION_ENDPOINT}}/api/v1/save_media'
+      forward_client_headers: true
+      headers:
+        - name: ACTION_SECRET
+          value_from_env: HASURA_ACTION_SECRET
+    permissions:
+      - role: basic
+custom_types:
+  enums: []
+  input_objects:
+    - name: GetUserInput
+    - name: ConfirmEmailInput
+    - name: RegisterEmailInput
+    - name: SaveMediaInput
+    - name: MinioGetUploadUrlInput
+    - name: DeleteImageInput
+    - name: BooleanInput
+  objects:
+    - name: GetUserOutput
+    - name: GetTokenOutput
+    - name: ConfirmEmailOutput
+    - name: RegisterEmailOutput
+    - name: MinioGetUploadUrlOutput
+    - name: Media
+    - name: SaveMediaOutput
+    - name: DeleteImageOutput
+    - name: BooleanOutput
+  scalars: []
