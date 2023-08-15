@@ -14,7 +14,8 @@ COPY . .
 RUN cargo build --release --bin still-bott
 
 # We do not need the Rust toolchain to run the binary!
-FROM debian:buster-slim AS runtime
+FROM debian:bullseye-slim AS runtime
 WORKDIR /app
 COPY --from=builder /app/target/release/still-bott /usr/local/bin
+EXPOSE 3000
 ENTRYPOINT ["/usr/local/bin/still-bott"]
