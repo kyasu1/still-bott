@@ -45,6 +45,10 @@ services:
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
       # - MINIO_SERVER_URL=${MINIO_SERVER_URL}
     command: server /data --console-address :9001
+  api:
+    image: ghcr.io/kyasu1/still-bott:latest
+    ports:
+      - 3000:3000
 volumes:
   db_data:
 
