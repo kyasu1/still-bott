@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>StiLL BOtt</title>
+</head>
+
+<body class="bg-gray-100">
+    <div class="h-screen flex items-center justify-center">
+        <div class="rounded-md py-4 px-6 bg-white w-full sm:w-3/4 sm:max-w-4xl">
+            <div class="flex flex-col items-center justify-center py-4">
+                <h1><img src="/assets/still_bott_logo.png" alt="StiLL BOttのロゴ"></h1>
+
+                <h2 class="font-semibold">Twitter API v2 に対応したボットサービスです</h2>
+    
+            </div>
+    
+
+
+            <div class="py-2"> 
+                <h2 class="font-bold mb-2">時報ツイート</h2>
+                <div class="text-sm text-gray-800">設定した曜日・時刻にツイートします。予め用意したメッセージの中から最新またはランダムに内容を選ぶことができます。</div>
+            </div>
+            <div class="py-2">
+                <h2 class="font-bold mb-2">RSSツイート</h2>
+                <div class="text-sm text-gray-800">指定されたRSSフィードのURLをチェックし、記事のリンクとタイトルおよび投稿日時をテンプレートに代入してツイートできます。</div>
+            </div>
+
+            <ul class="text-sm mt-4 mb-4 text-red-600 font-bold">
+                <li>都合により予告なくサービスを停止・廃止することがあります。</li>
+            </ul>
+            <div class="w-full flex flex-col items-center justify-center my-4 text-sm">
+
+                    <p
+                    class="w-32 rounded bg-indigo-600 px-2 py-1 text-sm font-semibold text-center text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    <a href="/auth/twitter">LOGIN</a>
+                </p>
+                <p class="mt-4">Twitterボットのアカウントにログインした状態で</p>
+                <p>このボタンをクリックしてください</p>
+            </div>
+    
+        </div>
+
+    </div>
+
+
+
+</body>
+
+</html>

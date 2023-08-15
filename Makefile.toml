@@ -1,0 +1,57 @@
+env_files = [".env"]
+
+[env]
+COMPOSE_DOCKER_CLI_BUILD = 1
+
+[tasks.dev-up]
+script = '''
+docker compose --profile dev up -d
+'''
+
+[tasks.dev-down]
+script = '''
+docker compose --profile dev down
+'''
+
+[tasks.run]
+env = { "RUST_LOG" = "debug" }
+command = "cargo"
+args = ["run"]
+
+[tasks.watch]
+env = { "RUST_LOG" = "debug" }
+command = "cargo"
+args = ["watch", "-x", "run"]
+
+[tasks.build]
+command = "cargo"
+args = ["build", "--release", "--bin", "app"]
+
+[tasks.test]
+env = { "RUST_LOG" = "debug" }
+command = "cargo"
+args = ["test", "--", "--nocapture"]
+
+[tasks.run-client]
+script = '''
+cd client
+npm run dev 
+'''
+
+[tasks.build-client]
+script = '''
+cd client
+npm run build 
+'''
+
+[tasks.elm-graphql]
+script = '''
+cd client
+npx elm-graphql $HASURA_ENDPOINT --scalar-codecs ScalarCodecs --base Hasura --header "x-hasura-admin-secret: $HASURA_GRAPHQL_ADMIN_SECRET"
+'''
+
+[tasks.cynic-graphql]
+script = '''
+rm -f schema.graphql
+npx get-graphql-schema $HASURA_ENDPOINT --header "X-Hasura-Admin-Secret=$HASURA_GRAPHQL_ADMIN_SECRET" > schema.graphql
+'''
