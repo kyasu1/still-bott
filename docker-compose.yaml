@@ -86,8 +86,6 @@ services:
   api:
     # image: ghcr.io/kyasu1/still-bott:latest
     build: .
-    # ports:
-    #   - 3000:3000
     depends_on:
       - graphql-engine
       - traefik
@@ -110,8 +108,6 @@ services:
       HASURA_GRAPHQL_ENDPOINT: ${HASURA_GRAPHQL_ENDPOINT}
       POSTGRES_ENDPOINT: ${POSTGRES_ENDPOINT}
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
       SMTP_USERNAME: ${SMTP_USERNAME}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
       API_KEY: ${API_KEY}
