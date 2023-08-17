@@ -114,54 +114,61 @@ async fn login_authorized(
         .exchange_code(AuthorizationCode::new(query.code.clone()))
         .set_pkce_verifier(pkce_code_verifier)
         .request_async(async_http_client)
-        .await
-        .unwrap();
+        .await;
 
     tracing::info!("token_response: {:?}", token_response);
 
-    let twitter_user = crate::twitter::get_self(token_response.access_token().secret())
-        .await
-        .unwrap();
+    match token_response {
+        Ok(token_response) => {
+            let twitter_user = crate::twitter::get_self(token_response.access_token().secret())
+                .await
+                .unwrap();
 
-    let token = Token {
-        id: twitter_user.id.clone(),
-        access_token: token_response.access_token().secret().clone(),
-        refresh_token: token_response
-            .refresh_token()
-            .map(|refresh_token| refresh_token.secret().clone()),
-        issued_at: time::OffsetDateTime::now_utc(),
-        expires_in: token_response.expires_in(),
-    };
+            let token = Token {
+                id: twitter_user.id.clone(),
+                access_token: token_response.access_token().secret().clone(),
+                refresh_token: token_response
+                    .refresh_token()
+                    .map(|refresh_token| refresh_token.secret().clone()),
+                issued_at: time::OffsetDateTime::now_utc(),
+                expires_in: token_response.expires_in(),
+            };
 
-    match crate::gq::store_session::store_session(token).await {
-        Ok(_) => {
-            tracing::debug!("twitter token stored to hasura successfuly")
+            match crate::gq::store_session::store_session(token).await {
+                Ok(_) => {
+                    tracing::debug!("twitter token stored to hasura successfuly")
+                }
+                Err(err) => {
+                    tracing::error!("failed to store twitter token to hasura");
+                    tracing::error!("{:?}", err);
+                    return Err(StatusCode::UNAUTHORIZED);
+                }
+            }
+
+            // Create a new session filled with user data and tokens
+            let mut session = Session::new();
+            session.insert("user", &twitter_user).unwrap();
+
+            // Store session and get corresponding cookie
+            let cookie_string: String = store.store_session(session).await.unwrap().unwrap();
+
+            let cookie: Cookie = Cookie::build(COOKIE_NAME, cookie_string)
+                .http_only(true)
+                .same_site(SameSite::Lax)
+                .path("/")
+                .finish();
+
+            // Set cookie
+            let mut headers = HeaderMap::new();
+            headers.insert(SET_COOKIE, cookie.to_string().parse().unwrap());
+
+            Ok((jar, headers, Redirect::to(&CONFIG.backend_endpoint)))
         }
         Err(err) => {
-            tracing::error!("failed to store twitter token to hasura");
-            tracing::error!("{:?}", err);
-            return Err(StatusCode::UNAUTHORIZED);
+            tracing::error!("{}", err);
+            Err(StatusCode::UNAUTHORIZED)
         }
     }
-
-    // Create a new session filled with user data and tokens
-    let mut session = Session::new();
-    session.insert("user", &twitter_user).unwrap();
-
-    // Store session and get corresponding cookie
-    let cookie_string: String = store.store_session(session).await.unwrap().unwrap();
-
-    let cookie: Cookie = Cookie::build(COOKIE_NAME, cookie_string)
-        .http_only(true)
-        .same_site(SameSite::Lax)
-        .path("/")
-        .finish();
-
-    // Set cookie
-    let mut headers = HeaderMap::new();
-    headers.insert(SET_COOKIE, cookie.to_string().parse().unwrap());
-
-    Ok((jar, headers, Redirect::to(&CONFIG.backend_endpoint)))
 
     // let client = reqwest::Client::new();
 

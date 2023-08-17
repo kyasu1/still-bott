@@ -13,6 +13,12 @@ script = '''
 docker compose --profile dev down
 '''
 
+[tasks.prod-up]
+env_files = [".env.prod"]
+script = '''
+docker compose up -d
+'''
+
 [tasks.run]
 env = { "RUST_LOG" = "debug" }
 command = "cargo"
@@ -39,6 +45,7 @@ npm run dev
 '''
 
 [tasks.build-client]
+env_files = [".env.prod"]
 script = '''
 cd client
 npm run build 

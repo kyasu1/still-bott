@@ -40,9 +40,9 @@ impl FromRef<AppState> for mpsc::ActorHandle {
 pub fn oauth_client() -> BasicClient {
     let client_id = CONFIG.twitter_client_id.clone();
     let client_secret = CONFIG.twitter_client_secret.clone();
+    let auth_url = String::from("https://twitter.com/i/oauth2/authorize");
+    let token_url = String::from("https://api.twitter.com/2/oauth2/token");
     let redirect_url = format!("{}/auth/authorized", CONFIG.backend_endpoint);
-    let auth_url = CONFIG.twitter_auth_url.clone();
-    let token_url = CONFIG.twitter_token_url.clone();
 
     BasicClient::new(
         ClientId::new(client_id),

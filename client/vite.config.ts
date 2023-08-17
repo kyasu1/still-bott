@@ -2,12 +2,13 @@ import { defineConfig } from "vite";
 import elmPlugin from "vite-plugin-elm";
 import replace from "@rollup/plugin-replace";
 
-console.log(process.env.CLIENT_ENDPOINT);
-
 export default defineConfig({
   server: {
     port: 3001,
     host: "127.0.0.1",
+  },
+  build: {
+    outDir: "../dist",
   },
   plugins: [
     elmPlugin({ debug: true }),

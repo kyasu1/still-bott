@@ -7,12 +7,14 @@ services:
       - db_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    ports:
-      - "15432:5432"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.postgres.rule=Host(`postgres.still-bott.com`)"
+      - "traefik.http.routers.postgres.service=postgres"
+      - "traefik.http.routers.postgres.tls=true"
+      - "traefik.http.services.postgres.loadbalancer.server.port=5432"      
   graphql-engine:
     image: hasura/graphql-engine:v2.23.0
-    ports:
-      - "18080:8080"
     depends_on:
       - "postgres"
     restart: always
@@ -32,36 +34,80 @@ services:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_JWT_SECRET: ${HASURA_GRAPHQL_JWT_SECRET}
       HASURA_ACTION_SECRET: ${HASURA_ACTION_SECRET}
-      HASURA_ACTION_ENDPOINT: ${HASURA_ACTION_ENDPOINT}      
-  minio:
-    image: "minio/minio:RELEASE.2023-04-28T18-11-17Z"
-    volumes:
-      - "./minio/data:/data:delegated"
-    ports:
-      - 19000:9000
-      - 19001:9001
-    environment:
-      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
-      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
-      # - MINIO_SERVER_URL=${MINIO_SERVER_URL}
-    command: server /data --console-address :9001
+      HASURA_ACTION_ENDPOINT: ${HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}
+      # HASURA_GRAPHQL_CORS_DOMAIN: ${BACKEND_ENDPOINT}  
+      # HASURA_GRAPHQL_CORS_DOMAIN: "*"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.graphql-engine.rule=Host(`graphql-engine.still-bott.com`)"
+      - "traefik.http.routers.graphql-engine.service=graphql-engine"
+      - "traefik.http.routers.graphql-engine.tls=true"
+      - "traefik.http.services.graphql-engine.loadbalancer.server.port=8080"
+      
+      - "traefik.http.middlewares.cors.headers.accesscontrolallowmethods=GET,OPTIONS,POST"
+      # - "traefik.http.middlewares.cors.headers.accesscontrolallowheaders=*"
+      # - "traefik.http.middlewares.cors.headers.accesscontrolalloworiginlist="
+      - "traefik.http.middlewares.cors.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.cors.headers.addvaryheader=true"
+      - "traefik.http.middlewares.cors.headers.customResponseHeaders.Access-Control-Allow-Origin=https://still-bott.com"
+
+  # minio:
+  #   image: "minio/minio:latest"
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.minio.rule=Host(`minio.still-bott.com`)"
+  #     - "traefik.http.routers.minio.service=minio"
+  #     - "traefik.http.routers.minio.tls=true"
+  #     - "traefik.http.services.minio.loadbalancer.server.port=9000"
+  #     - "traefik.http.routers.minio-admin.rule=Host(`minio-admin.still-bott.com`)"
+  #     - "traefik.http.routers.minio-admin.service=minio-admin"
+  #     - "traefik.http.routers.minio-admin.tls=true"
+  #     - "traefik.http.services.minio-admin.loadbalancer.server.port=9001"
+  #   volumes:
+  #     - "./minio/data:/data:delegated"
+  #   environment:
+  #     - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+  #     - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+  #   command: server /data --console-address :9001
+  #   depends_on:
+  #     - traefik    
+  # traefik:
+  #   image: traefik:v3.0
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #     - "28080:8080"
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - ./traefik/tls.yml:/etc/traefik/tls.yml
+  #     - ./traefik/certs:/etc/traefik/certs/
+  #     - ./traefik/traefik.yml:/etc/traefik/traefik.yml
+
   api:
-    image: ghcr.io/kyasu1/still-bott:latest
-    ports:
-      - 3000:3000
+    # image: ghcr.io/kyasu1/still-bott:latest
+    build: .
+    # ports:
+    #   - 3000:3000
+    depends_on:
+      - graphql-engine
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`still-bott.com`)"
+      - "traefik.http.routers.api.service=api"
+      - "traefik.http.routers.api.tls=true"
+      - "traefik.http.services.api.loadbalancer.server.port=3000"
     environment:
       LOG_LEVEL: ${LOG_LEVEL}
       TWITTER_CLIENT_ID: ${TWITTER_CLIENT_ID}
       TWITTER_CLIENT_SECRET: ${TWITTER_CLIENT_SECRET}
-      TWITTER_AUTH_URL: ${TWITTER_AUTH_URL}
-      TWITTER_TOKEN_URL: ${TWITTER_TOKEN_URL}
       BACKEND_ENDPOINT: ${BACKEND_ENDPOINT}
       SERVER_PORT: ${SERVER_PORT}
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_JWT_SECRET: ${HASURA_GRAPHQL_JWT_SECRET}
       HASURA_ACTION_SECRET: ${HASURA_ACTION_SECRET}
       HASURA_ACTION_ENDPOINT: ${HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}
-      HASURA_ENDPOINT: ${HASURA_ENDPOINT}
+      HASURA_GRAPHQL_ENDPOINT: ${HASURA_GRAPHQL_ENDPOINT}
       POSTGRES_ENDPOINT: ${POSTGRES_ENDPOINT}
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
@@ -72,6 +118,8 @@ services:
       API_SECRET_KEY: ${API_SECRET_KEY}
       ACCESS_TOKEN: ${ACCESS_TOKEN}
       ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
 volumes:
   db_data:
 

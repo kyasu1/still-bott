@@ -9,8 +9,6 @@ pub struct Config {
 
     pub twitter_client_id: String,
     pub twitter_client_secret: String,
-    pub twitter_auth_url: String,
-    pub twitter_token_url: String,
 
     pub backend_endpoint: String,
     pub server_port: u16,

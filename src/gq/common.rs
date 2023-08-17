@@ -70,10 +70,11 @@ where
 
     let client = reqwest::Client::new();
     client
-        .post(format!(
-            "{}/v1/graphql",
-            crate::config::CONFIG.hasura_graphql_endpoint.clone()
-        ))
+        // .post(format!(
+        //     "{}/v1/graphql",
+        //     crate::config::CONFIG.hasura_graphql_endpoint.clone()
+        // ))
+        .post("http://graphql-engine:8080/v1/graphql")
         .header(
             "X-Hasura-Admin-Secret",
             &crate::config::CONFIG.hasura_graphql_admin_secret,

@@ -20,9 +20,9 @@ async fn main() {
     let app_state = crate::state::setup_state(sender).await;
 
     let app = app::create_app(app_state.clone()).await;
-    let addr = SocketAddr::from(([127, 0, 0, 1], config::CONFIG.server_port));
+    let addr = SocketAddr::from(([0, 0, 0, 0], config::CONFIG.server_port));
 
-    tracing::info!("Server listening on {}", config::CONFIG.server_port);
+    println!("Server listening on {} rel 02", config::CONFIG.server_port);
     // let backend = async move {
     //     axum::Server::bind(&addr)
     //         .serve(app.into_make_service())

@@ -392,7 +392,7 @@ async fn get_or_create_bucket(bucket_name: &str) -> Result<s3::Bucket, ApiError>
         match s3::bucket::Bucket::create_with_path_style(bucket_name, region, credentials, config)
             .await
         {
-            Ok(_) => {
+            Ok(resp) => {
                 tracing::info!("Bucket {} created", bucket_name);
             }
             Err(err) => {

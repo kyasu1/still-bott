@@ -14,14 +14,13 @@ pub async fn create_app(app_state: AppState) -> Router {
     logger::setup();
 
     // let serve_dir = ServeDir::new("client/dist").not_found_service(handle_404.into_service());
-    let serve_dir =
-        ServeDir::new("client/dist").not_found_service(ServeFile::new("client/dist/index.html"));
+    let serve_dir = ServeDir::new("./dist").not_found_service(ServeFile::new("./dist/index.html"));
 
     Router::new()
         .merge(routes::auth::create_route())
         .merge(routes::api::create_route())
         .merge(routes::html::create_route())
-        .merge(Router::new().nest_service("/assets", ServeDir::new("./client/dist/assets")))
+        .merge(Router::new().nest_service("/assets", ServeDir::new("./dist/assets")))
         .fallback_service(serve_dir)
         .layer(
             CorsLayer::new()

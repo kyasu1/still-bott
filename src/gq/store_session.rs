@@ -59,12 +59,6 @@ pub async fn store_session(token: crate::model::Token) -> Result<crate::model::T
         access_token: token.access_token,
         refresh_token: token.refresh_token,
         expires_in: token.expires_in.map(|d| d.as_secs() as i32),
-        // issued_at: super::common::scalars::Timestamptz(
-        //     token
-        //         .issued_at
-        //         .format(&time::format_description::well_known::iso8601::Iso8601::DEFAULT)
-        //         .unwrap(),
-        // ),
         issued_at: token.issued_at.into(),
     };
 
