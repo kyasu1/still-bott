@@ -7,6 +7,10 @@ services:
       - db_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      #      - default
+      - traefik
+
   graphql-engine:
     image: hasura/graphql-engine:v2.23.0
     depends_on:
@@ -48,7 +52,7 @@ services:
       - "traefik.http.middlewares.cors.headers.addvaryheader=true"
       - "traefik.http.middlewares.cors.headers.customResponseHeaders.Access-Control-Allow-Origin=https://still-bott.miemon.top"
     networks:
-      - default
+      #      - default
       - traefik
 
 
@@ -90,7 +94,7 @@ services:
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
     networks:
-      - default
+      #      - default
       - traefik
 
 volumes:
