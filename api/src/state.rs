@@ -44,6 +44,8 @@ pub fn oauth_client() -> BasicClient {
     let token_url = String::from("https://api.twitter.com/2/oauth2/token");
     let redirect_url = format!("{}/auth/authorized", CONFIG.backend_endpoint);
 
+    tracing::debug!("oauth_cleint::redirect_url {}", redirect_url);
+
     BasicClient::new(
         ClientId::new(client_id),
         Some(ClientSecret::new(client_secret)),
