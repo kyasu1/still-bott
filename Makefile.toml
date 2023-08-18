@@ -21,44 +21,49 @@ docker compose up -d
 
 [tasks.run]
 env = { "RUST_LOG" = "debug" }
+cwd = "./api"
 command = "cargo"
 args = ["run"]
 
 [tasks.watch]
 env = { "RUST_LOG" = "debug" }
+cwd = "./api"
 command = "cargo"
 args = ["watch", "-x", "run"]
 
 [tasks.build]
+cwd = "./api"
 command = "cargo"
 args = ["build", "--release", "--bin", "app"]
 
 [tasks.test]
 env = { "RUST_LOG" = "debug" }
+cwd = "./api"
 command = "cargo"
 args = ["test", "--", "--nocapture"]
 
 [tasks.run-client]
+cwd = "./client"
 script = '''
-cd client
 npm run dev 
 '''
 
 [tasks.build-client]
 env_files = [".env.prod"]
+cwd = "./client"
 script = '''
-cd client
 npm run build 
 '''
 
 [tasks.elm-graphql]
 script = '''
 cd client
-npx elm-graphql $HASURA_ENDPOINT --scalar-codecs ScalarCodecs --base Hasura --header "x-hasura-admin-secret: $HASURA_GRAPHQL_ADMIN_SECRET"
+npx elm-graphql "$HASURA_ENDPOINT/v1/graphql" --scalar-codecs ScalarCodecs --base Hasura --header "x-hasura-admin-secret: $HASURA_GRAPHQL_ADMIN_SECRET"
 '''
 
 [tasks.cynic-graphql]
 script = '''
+cd api
 rm -f schema.graphql
-npx get-graphql-schema $HASURA_ENDPOINT --header "X-Hasura-Admin-Secret=$HASURA_GRAPHQL_ADMIN_SECRET" > schema.graphql
+npx get-graphql-schema "$HASURA_ENDPOINT/v1/graphql" --header "X-Hasura-Admin-Secret=$HASURA_GRAPHQL_ADMIN_SECRET" > schema.graphql
 '''

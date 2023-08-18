@@ -85,10 +85,13 @@ services:
 
   api:
     # image: ghcr.io/kyasu1/still-bott:latest
-    build: .
+    build: ./api
     depends_on:
       - graphql-engine
       - traefik
+    volumes:
+      - ./dist:/app/dist
+      - ./traefik/certs/still-bott.com.pem:/usr/local/share/ca-certificates/still-bott.com.crt
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.api.rule=Host(`still-bott.com`)"
@@ -96,6 +99,7 @@ services:
       - "traefik.http.routers.api.tls=true"
       - "traefik.http.services.api.loadbalancer.server.port=3000"
     environment:
+      RUST_LOG: "debug"
       LOG_LEVEL: ${LOG_LEVEL}
       TWITTER_CLIENT_ID: ${TWITTER_CLIENT_ID}
       TWITTER_CLIENT_SECRET: ${TWITTER_CLIENT_SECRET}

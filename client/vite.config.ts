@@ -16,7 +16,7 @@ export default defineConfig({
     replace({
       preventAssignment: true,
       // 'process.env.NODE_ENV': JSON.stringify('production'),
-      __buildDate__: () => JSON.stringify(new Date()),
+      __BUILD_DATE__: () => JSON.stringify(new Date()),
       __HASURA_ENDPOINT__: process.env.HASURA_GRAPHQL_ENDPOINT,
       __BACKEND_ENDPOINT__: process.env.BACKEND_ENDPOINT,
     }),

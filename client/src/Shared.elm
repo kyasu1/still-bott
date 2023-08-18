@@ -162,6 +162,7 @@ side current user_ =
                         text ""
                 , div [ class "font-bold text-white" ] [ text user_.name, text " さん" ]
                 , div [ class "text-sm text-gray-200" ] [ text "( ID: ", text user_.username, text " )" ]
+                , div [ class "text-xs text-gray-100" ] [ text "__BUILD_DATE__" ]
                 ]
             , nav [ class "flex flex-1 flex-col" ]
                 [ ul [ Role.list, A.class "flex flex-1 flex-col gap-y-7" ]

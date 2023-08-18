@@ -19,13 +19,14 @@ WORKDIR /app
 COPY --from=builder /app/target/release/still-bott /usr/local/bin
 
 # For self signed certificate support
-COPY ./traefik/certs/still-bott.com.pem /usr/local/share/ca-certificates/still-bott.com.crt
 RUN apt-get update
 RUN apt-get install ca-certificates -y
-RUN update-ca-certificates
 
-COPY ./dist/ /app/dist/
+RUN mkdir /app/dist
+
+COPY ./run.sh /app/run.sh
+RUN ["chmod", "+x", "/app/run.sh"]
 
 ENV RUST_LOG debug
 EXPOSE 3000
-ENTRYPOINT ["/usr/local/bin/still-bott"]
+ENTRYPOINT ["/app/run.sh"]
