@@ -1,4 +1,4 @@
-version: '3.6'
+version: '3.7'
 services:
   postgres:
     image: postgres:14
@@ -7,12 +7,6 @@ services:
       - db_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.postgres.rule=Host(`postgres.still-bott.com`)"
-      - "traefik.http.routers.postgres.service=postgres"
-      - "traefik.http.routers.postgres.tls=true"
-      - "traefik.http.services.postgres.loadbalancer.server.port=5432"      
   graphql-engine:
     image: hasura/graphql-engine:v2.23.0
     depends_on:
@@ -34,7 +28,7 @@ services:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_JWT_SECRET: ${HASURA_GRAPHQL_JWT_SECRET}
       HASURA_ACTION_SECRET: ${HASURA_ACTION_SECRET}
-      HASURA_ACTION_ENDPOINT: ${HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}
+      HASURA_ACTION_ENDPOINT: "http://api:3000"
       # HASURA_GRAPHQL_CORS_DOMAIN: ${BACKEND_ENDPOINT}  
       # HASURA_GRAPHQL_CORS_DOMAIN: "*"
     labels:
@@ -79,10 +73,7 @@ services:
       - "28080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik/tls.yml:/etc/traefik/tls.yml
-      - ./traefik/certs:/etc/traefik/certs/
-      - ./traefik/traefik.yml:/etc/traefik/traefik.yml
-
+      - ./traefik:/etc/traefik/
   api:
     # image: ghcr.io/kyasu1/still-bott:latest
     build: ./api
@@ -108,9 +99,8 @@ services:
       HASURA_GRAPHQL_ADMIN_SECRET: ${HASURA_GRAPHQL_ADMIN_SECRET}
       HASURA_GRAPHQL_JWT_SECRET: ${HASURA_GRAPHQL_JWT_SECRET}
       HASURA_ACTION_SECRET: ${HASURA_ACTION_SECRET}
-      HASURA_ACTION_ENDPOINT: ${HASURA_GRAPHQL_ACTIONS_HANDLER_WEBHOOK_BASEURL}
       HASURA_GRAPHQL_ENDPOINT: ${HASURA_GRAPHQL_ENDPOINT}
-      POSTGRES_ENDPOINT: ${POSTGRES_ENDPOINT}
+      POSTGRES_ENDPOINT: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
       SMTP_USERNAME: ${SMTP_USERNAME}
       SMTP_PASSWORD: ${SMTP_PASSWORD}

@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  api:
+    image: ghcr.io/kyasu1/still-bott:latest
+    build: !reset
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=Host(`still-bott.miemon.top`)"
+      - "traefik.http.routers.api.tls.certresolver=myresolver"
+      - "traefik.http.routers.api.tls.domains[0].main=still-bott.miemon.top"
+  graphql-engine:
+    environment:
+      HASURA_GRAPHQL_DEV_MODE: "false"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log
+    labels:
+      - "traefik.http.routers.graphql-engine.rule=Host(`graphql-engine.miemon.top`)"
+      - "traefik.http.routers.graphql-engine.tls.certresolver=myresolver"
+      - "traefik.http.routers.graphql-engine.tls.domains[0].main=still-bott.miemon.top"
+      - "traefik.http.middlewares.cors.headers.customResponseHeaders.Access-Control-Allow-Origin=https://still-bott.miemon.top"
