@@ -8,7 +8,7 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
-  WORK_DIR: ~/still_bott
+  WORK_DIR: ~/still-bott
   IMAGE_NAME: ${{ github.actor }}/still-bott:latest
   HASURA_GRAPHQL_ENDPOINT: "https://graphql-engine.miemon.top"
   BACKEND_ENDPOINT: "https://miemon.top"
