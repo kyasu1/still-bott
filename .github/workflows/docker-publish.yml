@@ -27,7 +27,7 @@ jobs:
   #       run: |
   #         docker build . --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
   #         docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-  deploy:
+  deploy-docker:
     # needs: publish
     name: deploy image
     runs-on: ubuntu-latest
@@ -46,6 +46,7 @@ jobs:
         run: rm -rf ~/.ssh
 
   deploy-client:
+    needs: deploy-docker
     name: deploy client
     runs-on: ubuntu-latest
     steps:
@@ -57,9 +58,11 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /home/yako/still-bott/client
+            cd ${{ secrets.WORK_DIR }}
+            git pull
+            cd client
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm install --lts
             npm install 
-            npm run build
+            HASURA_GRAPHQL_ENDPOINT=${{ env.HASURA_GRAPHQL_ENDPOINT}} BACKEND_ENDPOINT=${{ env.BACKEND_ENDPOINT }} npm run build
