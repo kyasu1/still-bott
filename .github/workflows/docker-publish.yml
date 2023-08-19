@@ -40,7 +40,7 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
       - name: connect and pull
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && docker compose -f miemon.yaml pull && docker compose -f miemon.yaml up -d && exit"
+        run: ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && docker compose -f miemon.yaml pull && docker compose -f miemon.yaml up -d && exit"
       - name: build and deploy client
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
