@@ -39,13 +39,13 @@ jobs:
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
-      - name: connect and pull
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && docker compose -f miemon.yaml pull && docker compose -f miemon.yaml up -d && exit"
-      - name: build and deploy client
-        run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
-          cd client
-          npm install
-          npm run build
-      - name: cleanup
-        run: rm -rf ~/.ssh
+      # - name: connect and pull
+      #   run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && docker compose -f miemon.yaml pull && docker compose -f miemon.yaml up -d && exit"
+      # - name: build and deploy client
+      #   run: |
+      #     ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
+      #     cd client
+      #     npm install
+      #     npm run build
+      # - name: cleanup
+      #   run: rm -rf ~/.ssh
