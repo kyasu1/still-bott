@@ -8,6 +8,7 @@ on:
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
+  WORK_DIR: ./still_bott
   IMAGE_NAME: ${{ github.actor }}/still-bott:latest
   HASURA_GRAPHQL_ENDPOINT: "https://graphql-engine.miemon.top"
   BACKEND_ENDPOINT: "https://miemon.top"
@@ -40,11 +41,11 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -p ${{ secrets.SSH_PORT }} -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
       - name: connect and pull
-        run: ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.WORK_DIR }} && docker compose -f miemon.yaml pull && docker compose -f miemon.yaml up -d && exit"
+        run: ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd ${{ env.WORK_DIR }} && docker compose -f miemon.yaml pull && docker compose -f miemon.yaml up -d && exit"
       - name: build and deploy client
         run: |
           ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
-          cd ${{ secrets.WORK_DIR }}/client
+          cd ${{ env.WORK_DIR }}/client
           npm install
           npm run build
       - name: cleanup
