@@ -12,22 +12,22 @@ env:
   HASURA_GRAPHQL_ENDPOINT: https://graphql-engine.miemon.top
   BACKEND_ENDPOINT: https://miemon.top
 jobs:
-  publish:
-    name: publish image
-    runs-on: ubuntu-latest
+  # publish:
+  #   name: publish image
+  #   runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v3
-      - name: Login
-        run: |
-          echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      - name: Build and Publish Backend
-        working-directory: ./api
-        run: |
-          docker build . --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Login
+  #       run: |
+  #         echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+  #     - name: Build and Publish Backend
+  #       working-directory: ./api
+  #       run: |
+  #         docker build . --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+  #         docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
   deploy:
-    needs: publish
+    # needs: publish
     name: deploy image
     runs-on: ubuntu-latest
 
@@ -46,6 +46,6 @@ jobs:
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
           cd client
           npm install
-          npm run build 
+          npm run build
       - name: cleanup
         run: rm -rf ~/.ssh
