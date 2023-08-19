@@ -11,7 +11,7 @@ env:
   WORK_DIR: /home/yako/still-bott
   IMAGE_NAME: ${{ github.actor }}/still-bott:latest
   HASURA_GRAPHQL_ENDPOINT: "https://graphql-engine.miemon.top"
-  BACKEND_ENDPOINT: "https://miemon.top"
+  BACKEND_ENDPOINT: "https://still-bott.miemon.top"
 jobs:
   # publish:
   #   name: publish image
