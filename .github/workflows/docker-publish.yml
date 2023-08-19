@@ -58,7 +58,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             pwd
-            cd ${{ env.WORK_DIR }}/client
-            source /home/yako/.bashrc
+            cd ~/home/yako/still-bott/client
+            ls -lR
             npm install 
             npm run build
