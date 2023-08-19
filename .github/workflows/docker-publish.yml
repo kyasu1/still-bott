@@ -44,7 +44,7 @@ jobs:
       - name: build and deploy client
         run: |
           ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
-          cd client
+          cd ${{ secrets.WORK_DIR }}/client
           npm install
           npm run build
       - name: cleanup
