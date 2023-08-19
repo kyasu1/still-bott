@@ -45,6 +45,7 @@ jobs:
       - name: build and deploy client
         run: |
           ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
+          ls -lR
           cd ${{ env.WORK_DIR }}/client
           which nvm
           nvm use default
