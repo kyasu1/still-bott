@@ -57,4 +57,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            whoami
+            pwd
+            cd ${{ env.WORK_DIR }}/client
+            npm install 
+            npm run build
