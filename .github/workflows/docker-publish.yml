@@ -46,7 +46,8 @@ jobs:
         run: |
           ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
           pwd
-          ls /home/yako
+          ls /home/runner/work/still-bott/still-bott
+          cd /home/runner/work/still-bott/still-bott
           ls -lR
           cd ${{ env.WORK_DIR }}/client
           which nvm
