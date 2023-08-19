@@ -50,15 +50,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: executing remote ssh commands using ssh key
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@main
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            pwd
-            cd ~/home/yako/still-bott/client
-            ls -lR
+            cd /home/yako/still-bott/client
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            nvm install --lts
             npm install 
             npm run build
